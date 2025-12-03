@@ -7,7 +7,7 @@ const fs = require('fs');
 const WhatsAppBot = require('./index');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || "0.0.0.0";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,7 +25,7 @@ bot.on('qr', async (qr) => {
     latestQrString = qr;
     connectionStatus = 'qr_pending';
     lastStatusChange = Date.now();
-    
+
     // Generate QR image for web
     try {
         qrImage = await qrcode.toDataURL(qr);
@@ -82,13 +82,13 @@ setInterval(() => {
 app.get('/', async (req, res) => {
     try {
         const template = fs.readFileSync(path.join(__dirname, 'public', 'form.html'), 'utf8');
-        
+
         let statusText = 'Disconnected ❌';
         let statusClass = 'status-disconnected';
         let qrImgHtml = '';
         let buttonDisabled = 'disabled';
         let showInstructions = false;
-        
+
         if (connectionStatus === 'connected') {
             statusText = 'Connected ✅';
             statusClass = 'status-connected';
@@ -128,7 +128,7 @@ app.get('/', async (req, res) => {
             statusText = 'Connecting... 🔄';
             statusClass = 'status-connecting';
         }
-        
+
         // Replace all placeholders
         let html = template;
         html = html.replace(/{{STATUS_TEXT}}/g, statusText);
@@ -136,7 +136,7 @@ app.get('/', async (req, res) => {
         html = html.replace(/{{QR_IMAGE}}/g, qrImgHtml);
         html = html.replace(/{{BUTTON_DISABLED}}/g, buttonDisabled);
         html = html.replace(/{{SHOW_INSTRUCTIONS}}/g, showInstructions ? 'block' : 'none');
-        
+
         res.send(html);
     } catch (error) {
         console.error('❌ Error loading page:', error);
@@ -153,7 +153,7 @@ app.get('/', async (req, res) => {
 // Send message endpoint
 app.post('/send-message', async (req, res) => {
     const { phone, message } = req.body;
-    
+
     // Validate input
     if (!phone || !message) {
         return res.send(`
@@ -163,7 +163,7 @@ app.post('/send-message', async (req, res) => {
             </div>
         `);
     }
-    
+
     // Validate phone format
     const cleanPhone = phone.replace(/\D/g, '');
     if (cleanPhone.length < 10) {
@@ -175,7 +175,7 @@ app.post('/send-message', async (req, res) => {
             </div>
         `);
     }
-    
+
     // Check connection
     if (connectionStatus !== 'connected') {
         return res.send(`
@@ -187,7 +187,7 @@ app.post('/send-message', async (req, res) => {
             </div>
         `);
     }
-    
+
     try {
         await bot.sendMessage(cleanPhone, message);
         res.send(`
