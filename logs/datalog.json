@@ -1,0 +1,20 @@
+[
+  {
+    "phone": "919342030292",
+    "message": "hi hello",
+    "date": "2025-12-03",
+    "time": "5:40:48 PM",
+    "timestamp": "2025-12-03T12:10:48.971Z",
+    "status": "sent",
+    "baileys_id": "3EB00C07C7C8A9ECE39873"
+  },
+  {
+    "phone": "919342030292",
+    "message": "nice . good job\r\n",
+    "date": "2025-12-03",
+    "time": "5:42:25 PM",
+    "timestamp": "2025-12-03T12:12:25.045Z",
+    "status": "sent",
+    "baileys_id": "3EB0DDF3551441EA890519"
+  }
+]
