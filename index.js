@@ -1,8 +1,14 @@
-const { makeWASocket, fetchLatestBaileysVersion, useMultiFileAuthState, DisconnectReason, Browsers } = require('@whiskeysockets/baileys');
-const EventEmitter = require('events');
-const qrcode = require('qrcode-terminal');
-const fs = require('fs');
-const path = require('path');
+import {
+    makeWASocket,
+    fetchLatestBaileysVersion,
+    useMultiFileAuthState,
+    DisconnectReason,
+    Browsers
+} from '@whiskeysockets/baileys';
+import EventEmitter from "events";
+import qrcode from "qrcode-terminal";
+import fs from "fs";
+import path from "path";
 
 class WhatsAppBot extends EventEmitter {
     constructor() {
