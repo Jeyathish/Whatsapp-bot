@@ -1,10 +1,10 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const qrcode = require('qrcode');
-const fs = require('fs');
+import express from "express";
+import bodyParser from "body-parser";
+import path from "path";
+import fs from "fs";
+import qrcode from "qrcode";
 
-const WhatsAppBot = require('./index');
+import WhatsAppBot from "./index";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
