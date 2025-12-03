@@ -158,7 +158,7 @@ app.get('/', async (req, res) => {
     }
 });
 
-// Send message endpoint
+// Send message endpoint (replace existing handler)
 app.post('/send-message', async (req, res) => {
     const { phone, message } = req.body;
 
@@ -196,8 +196,58 @@ app.post('/send-message', async (req, res) => {
         `);
     }
 
+    const fsPromises = fs.promises;
+    const logDir = path.join(__dirname, 'logs');
+    const logFile = path.join(logDir, 'datalog.json');
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+    const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: true });
+    const isoTimestamp = now.toISOString();
+
+    const logEntryBase = {
+        phone: cleanPhone,
+        message: message,
+        date: dateStr,
+        time: timeStr,
+        timestamp: isoTimestamp
+    };
+
     try {
-        await bot.sendMessage(cleanPhone, message);
+        if (!fs.existsSync(logDir)) {
+            fs.mkdirSync(logDir, { recursive: true });
+        }
+    } catch (err) {
+        console.error('❌ Failed to create log directory:', err);
+    }
+
+    // Helper to append entry to datalog.json
+    async function appendLog(entry) {
+        try {
+            let arr = [];
+            try {
+                const content = await fsPromises.readFile(logFile, 'utf8');
+                arr = JSON.parse(content || '[]');
+                if (!Array.isArray(arr)) arr = [];
+            } catch (e) {
+                arr = [];
+            }
+            arr.push(entry);
+            await fsPromises.writeFile(logFile, JSON.stringify(arr, null, 2), 'utf8');
+        } catch (e) {
+            console.error('❌ Failed to write log file:', e);
+        }
+    }
+
+    try {
+        const sendResult = await bot.sendMessage(cleanPhone, message);
+        const entry = {
+            ...logEntryBase,
+            status: 'sent',
+            baileys_id: sendResult?.id ?? null
+        };
+        await appendLog(entry);
+
         res.send(`
             <div style="text-align: center; padding: 40px;">
                 <h2 style="color: #25D366;">✅ Message Sent Successfully!</h2>
@@ -210,6 +260,13 @@ app.post('/send-message', async (req, res) => {
             </div>
         `);
     } catch (error) {
+        const entry = {
+            ...logEntryBase,
+            status: 'failed',
+            error: error?.message ?? String(error)
+        };
+        await appendLog(entry);
+
         res.send(`
             <div style="text-align: center; padding: 40px;">
                 <h2 style="color: #dc3545;">❌ Failed to Send Message</h2>
