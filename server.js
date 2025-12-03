@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 import qrcode from "qrcode";
 
-import WhatsAppBot from "./index.js";
+import { WhatsAppBot } from "./index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
