@@ -6,6 +6,10 @@ import qrcode from "qrcode";
 
 import WhatsAppBot from "./index.js";
 
+// ⬅️ ADD THIS
+import { fileURLToPath } from "url";
+
+// ⬅️ FIX __dirname for ES MODULES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
