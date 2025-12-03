@@ -6,12 +6,15 @@ import qrcode from "qrcode";
 
 import WhatsAppBot from "./index.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = "0.0.0.0";
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 const bot = new WhatsAppBot();
 
