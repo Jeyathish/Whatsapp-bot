@@ -1,5 +1,6 @@
 {
   "name": "whatsapp-bot",
+  "type": "module",
   "version": "1.0.0",
   "description": "WhatsApp Bot",
   "main": "server.js",
