@@ -7,7 +7,8 @@ const fs = require('fs');
 const WhatsAppBot = require('./index');
 
 const app = express();
-const PORT = process.env.PORT || "0.0.0.0";
+const PORT = process.env.PORT || 3000;
+const HOST = "0.0.0.0";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -241,7 +242,7 @@ app.get('/health', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
     console.log(`📱 WhatsApp Bot Dashboard ready`);
     console.log(`⚡ Health check: http://localhost:${PORT}/health`);
